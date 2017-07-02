@@ -1,6 +1,6 @@
 package springboot.test;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,36 +17,32 @@ import net.sf.ehcache.Element;
 @RestController
 @EnableAutoConfiguration
 public class HelloController {
-	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass()); 
-	
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	private static CacheManager cacheManager = CacheManager.newInstance();
 
 	@RequestMapping("/")
 	public String index() {
-		logger.info("Hello World!");  
+		logger.info("Hello World!");
 		return "Hello World!";
 	}
 
 	@RequestMapping("/hello/{name}")
 	public List<JobStatus> hello(@PathVariable String name) {
 		long start = System.currentTimeMillis();
-		
+
 		Ehcache cache = cacheManager.getEhcache("jobs");
-		List keys = cache.getKeys();
-		List<JobStatus> l = new ArrayList<JobStatus>();
-		for (int i = 0; i < keys.size(); i++) {
-			Element e = cache.get(keys.get(i));
-			if (e != null) {
-				JobStatus s = (JobStatus)e.getObjectValue();
-				l.add(s);
-			}
+		Element e = cache.get("job_cron");
+		List<JobStatus> l = null;
+		if (e != null) {
+			l = (List<JobStatus>) e.getObjectValue();
+			// Collections.reverse(l);
 		}
-		
-		
+
 		long used = System.currentTimeMillis() - start;
-		logger.info(l + ", Used time: " + used + "ms.");  
-		
+		logger.info(l + ", Used time: " + used + "ms.");
+
 		return l;
 	}
 

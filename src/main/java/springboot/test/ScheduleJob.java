@@ -36,12 +36,22 @@ public class ScheduleJob {
 	public void cronJob() {
 		Ehcache cache = cacheManager.getEhcache("jobs");
 		
+		Element e = cache.get("job_cron");
+		List<JobStatus> l = null;
+		if (e != null) {
+			l = (List<JobStatus>)e.getObjectValue();
+			
+		} else {
+			l = new ArrayList<JobStatus>();
+		}
+		
 		JobStatus js = new JobStatus();
 		js.setJobName("jobcron");
 		js.setStartTime(new Date());
 		js.setEndTime(new Date());
 		js.setResult("1");
-		cache.put(new Element("job_fixed|" + cache.getKeys().size(), js));
+		l.add(js);
+		cache.put(new Element("job_cron", l));
 		
 		System.out.println(new Date() + ">>cron执行....");
 	}
