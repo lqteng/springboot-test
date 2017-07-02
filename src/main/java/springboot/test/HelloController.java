@@ -29,20 +29,21 @@ public class HelloController {
 	}
 
 	@RequestMapping("/hello/{name}")
-	public List<String> hello(@PathVariable String name) {
+	public List<JobStatus> hello(@PathVariable String name) {
 		long start = System.currentTimeMillis();
 		
 		Ehcache cache = cacheManager.getEhcache("jobs");
+		cache.
 		List keys = cache.getKeys();
-		List<String> l = new ArrayList<String>();
+		List<JobStatus> l = new ArrayList<JobStatus>();
 		for (int i = 0; i < keys.size(); i++) {
 			Element e = cache.get(keys.get(i));
 			if (e != null) {
-				String s = (String)e.getObjectValue();
+				JobStatus s = (JobStatus)e.getObjectValue();
 				l.add(s);
 			}
-			
 		}
+		
 		
 		long used = System.currentTimeMillis() - start;
 		logger.info(l + ", Used time: " + used + "ms.");  

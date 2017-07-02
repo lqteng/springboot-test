@@ -24,10 +24,6 @@ public class ScheduleJob {
 
 	@Scheduled(fixedDelay = ONE_MINUTE)
 	public void fixedDelayJob() {
-		Ehcache cache = cacheManager.getEhcache("jobs");
-		
-		cache.put(new Element("job_fixed" + cache.getKeys().size(), new Date().toString()));
-
 		System.out.println(new Date() + ">>fixedDelay执行....");
 	}
 
@@ -38,6 +34,15 @@ public class ScheduleJob {
 
 	@Scheduled(cron = "${cron.expression}")
 	public void cronJob() {
+		Ehcache cache = cacheManager.getEhcache("jobs");
+		
+		JobStatus js = new JobStatus();
+		js.setJobName("jobcron");
+		js.setStartTime(new Date());
+		js.setEndTime(new Date());
+		js.setResult("1");
+		cache.put(new Element("job_fixed|" + cache.getKeys().size(), js));
+		
 		System.out.println(new Date() + ">>cron执行....");
 	}
 }
