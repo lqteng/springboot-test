@@ -33,7 +33,6 @@ public class HelloController {
 		long start = System.currentTimeMillis();
 		
 		Ehcache cache = cacheManager.getEhcache("jobs");
-		cache.
 		List keys = cache.getKeys();
 		List<JobStatus> l = new ArrayList<JobStatus>();
 		for (int i = 0; i < keys.size(); i++) {
