@@ -26,19 +26,7 @@ public class ScheduleJob {
 	public void fixedDelayJob() {
 		Ehcache cache = cacheManager.getEhcache("jobs");
 		
-		Element e = cache.get("job_fixed");
-		
-		if (e != null) {
-			List<String> l = (List<String>) e.getObjectValue();
-			l.add(new Date().toString());
-			cache.put(new Element("job_fixed", l));
-		} else {
-			List<String> l = new ArrayList<String>();
-			l.add(new Date().toString());
-			cache.put(new Element("job_fixed", l));
-		}
-		
-		
+		cache.put(new Element("job_fixed" + cache.getKeys().size(), new Date().toString()));
 
 		System.out.println(new Date() + ">>fixedDelay执行....");
 	}

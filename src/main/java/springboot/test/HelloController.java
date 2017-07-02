@@ -1,5 +1,6 @@
 package springboot.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -32,12 +33,16 @@ public class HelloController {
 		long start = System.currentTimeMillis();
 		
 		Ehcache cache = cacheManager.getEhcache("jobs");
-		Element e = cache.get("job_fixed");
-		List<String> l = null;
-		if (e != null) {
-			l = (List<String>) e.getObjectValue();
+		List keys = cache.getKeys();
+		List<String> l = new ArrayList<String>();
+		for (int i = 0; i < keys.size(); i++) {
+			Element e = cache.get(keys.get(i));
+			if (e != null) {
+				String s = (String)e.getObjectValue();
+				l.add(s);
+			}
+			
 		}
-
 		
 		long used = System.currentTimeMillis() - start;
 		logger.info(l + ", Used time: " + used + "ms.");  
