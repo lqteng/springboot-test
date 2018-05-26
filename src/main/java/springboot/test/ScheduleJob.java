@@ -27,7 +27,7 @@ public class ScheduleJob {
 		System.out.println(new Date() + ">>fixedDelay执行....");
 	}
 
-	@Scheduled(fixedRate = ONE_MINUTE)
+	@Scheduled(fixedRateString = "${cron.fixedrate}000")
 	public void fixedRateJob() {
 		System.out.println(new Date() + ">>fixedRate执行....");
 	}
@@ -35,16 +35,16 @@ public class ScheduleJob {
 	@Scheduled(cron = "${cron.expression}")
 	public void cronJob() {
 		Ehcache cache = cacheManager.getEhcache("jobs");
-		
+
 		Element e = cache.get("job_cron");
 		List<JobStatus> l = null;
 		if (e != null) {
-			l = (List<JobStatus>)e.getObjectValue();
-			
+			l = (List<JobStatus>) e.getObjectValue();
+
 		} else {
 			l = new ArrayList<JobStatus>();
 		}
-		
+
 		JobStatus js = new JobStatus();
 		js.setJobName("jobcron");
 		js.setStartTime(new Date());
@@ -52,7 +52,7 @@ public class ScheduleJob {
 		js.setResult("1");
 		l.add(js);
 		cache.put(new Element("job_cron", l));
-		
+
 		System.out.println(new Date() + ">>cron执行....");
 	}
 }
